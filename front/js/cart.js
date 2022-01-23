@@ -292,15 +292,3 @@ let start = () => {
 window.addEventListener('load', () => {
     start()
 })
-
-
-/*
-   ecoute des bouton supprimer
-   remonter parent article
-   recuperer data-id data-color
-   ligne 86. product.js pour trouver l'index du produit dans le panier
-   supprimer produit grace a l'index trouver
-*/
-    //ecoute des input
-    //                       '    cart__item     >cart__item__content__description :   '
-    //document.querySelector(".groups-container >div:last-child input")
