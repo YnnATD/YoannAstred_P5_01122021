@@ -19,7 +19,6 @@ let start = () => {
     // Récupération du localStorage
 
     let panierStorage = localStorage.getItem('panier')
-    console.log(JSON.parse(localStorage.getItem('panier')))
     if (!panierStorage) {
         panier = []
     } else {
@@ -67,7 +66,6 @@ let start = () => {
     let btnDelet = document.querySelectorAll('.deleteItem')
     btnDelet.forEach(item => {
         item.addEventListener('click', event => {
-            console.log('ecoute');
 
             // // remonter parent article
             // let fath = document.querySelector('.cart__item')
@@ -79,11 +77,10 @@ let start = () => {
             //   recuperer data-id data-color
             let dataID = fath.dataset.id
             let dataColor = fath.dataset.color
-            console.log(dataID + dataColor);
+
             // ligne 86. product.js pour trouver l'index du produit dans le panier
 
             let index = panier.findIndex(p => p._id == dataID && p.color == dataColor)
-            console.log(index)
 
             //Mise à jour du total
             updateTotal(-panier[index].quantity, -(panier[index].quantity * panier[index].price))
@@ -94,8 +91,6 @@ let start = () => {
 
             // Suppression dans le dom
             fath.remove()
-
-            console.log(panier)
 
             // Sauvegarde du panier dans le localStorage
             localStorage.setItem('panier', JSON.stringify(panier))
@@ -110,15 +105,10 @@ let start = () => {
         item.addEventListener('change', event => {
             //getitemn    // Récupération du localStorage
             localStorage.getItem('panier')
-            console.log(JSON.parse(localStorage.getItem('panier')))
-
-            console.log(produit.quantity)
-            console.log('changement');
 
             // récupérer valeur de input
 
             let boxPicked = parseInt(item.value)
-            console.log(boxPicked);
 
             // trouver l'index du produit dans le panier
 
@@ -127,16 +117,13 @@ let start = () => {
             //   recuperer data-id data-color
             let dataID = fath.dataset.id
             let dataColor = fath.dataset.color
-            console.log(dataID + dataColor);
 
             let index = panier.findIndex(p => p._id == dataID && p.color == dataColor)
-            console.log(index)
 
 
             // si la valeur de input est supérieur a la quantité du produit
             // 4 avant 2
             if (boxPicked > panier[index].quantity) {
-                console.log('ajout');
 
                 // nouveau 4
                 // ancien 2
@@ -144,7 +131,7 @@ let start = () => {
                 // Prix 10
                 // Prix total actuel 20
                 let newQuantity = boxPicked - panier[index].quantity //2
-                console.log(newQuantity);
+
                 //              2             2            10
                 updateTotal(newQuantity, (newQuantity * panier[index].price))
                 displayTotal()
@@ -156,7 +143,6 @@ let start = () => {
             // si la valeur de input est inférieur a la quantité du produit 
 
             if (boxPicked < panier[index].quantity) {
-                console.log('retrait');
                 let newQuantity = panier[index].quantity - boxPicked
                 updateTotal(-newQuantity, (-newQuantity * panier[index].price))
                 displayTotal()
@@ -170,24 +156,20 @@ let start = () => {
             descriptionValue = parseInt(priceDescription)
 
             if (boxPicked > panier[index].quantity) {
-                console.log('maj description price');
 
                 let newPrice = boxPicked * panier[index].price
-                console.log(newPrice);
 
                 item.closest('.cart__item__content').firstElementChild.lastElementChild.innerHTML = newPrice + " €"
                 panier[index].quantity = boxPicked
             }
             if (boxPicked < panier[index].quantity) {
                 let newPrice = boxPicked * panier[index].price
-                console.log(newPrice);
                 item.closest('.cart__item__content').firstElementChild.lastElementChild.innerHTML = newPrice + " €"
                 panier[index].quantity = boxPicked
             }
 
             // Sauvegarde du panier dans le localStorage
             localStorage.setItem('panier', JSON.stringify(panier))
-            console.log(JSON.parse(localStorage.getItem('panier')))
         })
 
     });
@@ -203,7 +185,6 @@ let start = () => {
 
         //html collection formulaire
         let form = event.target.closest('form').elements
-        console.log(form);
 
         // flag validation
         let flag = true
@@ -255,13 +236,12 @@ let start = () => {
             return false
         }
 
-        // -------  Envoi de la requête POST au back-end --------
+        // Envoi de la requête POST au back-end 
 
         let order = {
             contact: form, //objet qui sont les produits acheté
             products: panier.map(p => p._id) // objet qui contient les infos de l'acheteur
         }
-        console.log(order);
 
        // Création de l'entête de la requête
 
@@ -280,7 +260,6 @@ let start = () => {
             .then((response) => response.json())
             .then((data) => {
                 localStorage.clear();
-                console.log(data);
                 localStorage.setItem("orderId", data.orderId);
                 document.location.href = "confirmation.html";
             })

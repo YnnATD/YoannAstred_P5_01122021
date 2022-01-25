@@ -1,8 +1,15 @@
-function main(){
+let start = () => {
+
+    let str = window.location.href;
+    let url = new URL(str);
+    let idProduct = url.searchParams.get("id");
+
     let idNode = document.getElementById("orderId");
-    idNode.innerText = localStorage.getItem("orderId");
-    console.log(localStorage.getItem("orderId"))
-    localStorage.clear();
+    idNode.innerHTML = idProduct
+    
+    localStorage.removeItem('panier'); // On vide le localStorage pour recommencer plus tard le processus d'achat
 }
 
-main();
+window.addEventListener('load', () => {
+    start()
+})

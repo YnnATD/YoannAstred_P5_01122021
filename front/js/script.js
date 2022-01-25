@@ -2,13 +2,10 @@ window.addEventListener('load', (e) => {
   fetch('http://localhost:3000/api/products')
       .then(response => response.json())
       .then(products => {
-          console.log(products)
 
           let container = document.querySelector('#items')
 
-
           for(product of products){    
-              console.log(product) 
                
               container.insertAdjacentHTML('beforeend', `
                   <a href="./product.html?id=${product._id}">

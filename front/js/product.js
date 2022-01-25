@@ -8,10 +8,7 @@ let start = () => {
     fetch("http://localhost:3000/api/products/" + idProduct)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-
             insertProduct(data)
-
         })
         .catch(err => console.log(err))
 }
@@ -25,19 +22,16 @@ let insertProduct = (data) => {
 
     // Modification du titre
     document.getElementById('title').innerHTML = data.name;
-    
-    // TODO - nettoyer la variable inutile            
+            
     // Modification du prix
     document.getElementById('price').innerHTML = data.price;
 
-    // TODO - nettoyer la variable inutile
     // Modification de la description
     document.getElementById('description').innerHTML = data.description;
 
     // Insertion des options de couleurs
     let select = document.querySelector("#colors")
     for (let colors of data.colors) {
-        console.log(colors);
 
         let articleColors = document.createElement("option");
         articleColors.value = colors;
@@ -54,10 +48,6 @@ let startListener = (produit) => {
         const colorPicked = document.querySelector("#colors").value
         const quantityPicked = parseInt(document.querySelector("#quantity").value)
 
-        // Test des trucs
-        console.log(colorPicked)
-        console.log(quantityPicked)
-
         if(colorPicked == ''){
             alert('Veuillez choisir une couleur')
             return false
@@ -68,10 +58,8 @@ let startListener = (produit) => {
         }
 
       
-
         // Récupération du localStorage
         let panierStorage = localStorage.getItem('panier')
-        console.log(JSON.parse(localStorage.getItem('panier')))
         if(!panierStorage){
             panier = []
         }else{
@@ -84,22 +72,22 @@ let startListener = (produit) => {
         //     1 : {_id, color, quantity, ......} 
         // ]
         let index = panier.findIndex(p => p._id == produit._id && p.color == colorPicked)
-        console.log(index)
+
 
         if(index == -1){
-            console.log('ajout nouveau produit')
             produit.color = colorPicked
             produit.quantity = quantityPicked
-            
+
             // Mise en panier
             panier.push(produit)
-        }else{            
-            console.log('mise à jour de quantité')
+
+        }
+        else{          
+
             panier[index].quantity = panier[index].quantity + quantityPicked
             // panier[index].quantity += quantityPicked
+            
         }
-
-        console.log(panier)        
 
         // Sauvegarde du panier dans le localStorage
         localStorage.setItem('panier', JSON.stringify(panier))
