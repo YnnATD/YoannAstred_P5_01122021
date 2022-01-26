@@ -5,114 +5,122 @@ let idProduct = url.searchParams.get("id");
 
 // Récupération des articles de l'API
 let start = () => {
-    fetch("http://localhost:3000/api/products/" + idProduct)
-        .then(response => response.json())
-        .then(data => {
-            insertProduct(data)
-        })
-        .catch(err => console.log(err))
-}
 
-let insertProduct = (data) => {
-    // Insertion de l'image
-    let articleImg = document.createElement("img");
-    articleImg.src = data.imageUrl;
-    articleImg.alt = data.altTxt;
-    document.querySelector(".item__img").appendChild(articleImg);
+    function getArt() {
 
-    // Modification du titre
-    document.getElementById('title').innerHTML = data.name;
-            
-    // Modification du prix
-    document.getElementById('price').innerHTML = data.price;
+        fetch("http://localhost:3000/api/products/" + idProduct)
+            .then(response => response.json())
+            .then(data => {
+                insertProduct(data)
+            })
+            .catch(err => console.log(err))
 
-    // Modification de la description
-    document.getElementById('description').innerHTML = data.description;
+        let insertProduct = (data) => {
+            // Insertion de l'image
+            let articleImg = document.createElement("img");
+            articleImg.src = data.imageUrl;
+            articleImg.alt = data.altTxt;
+            document.querySelector(".item__img").appendChild(articleImg);
 
-    // Insertion des options de couleurs
-    let select = document.querySelector("#colors")
-    for (let colors of data.colors) {
+            // Modification du titre
+            document.getElementById('title').innerHTML = data.name;
 
-        let articleColors = document.createElement("option");
-        articleColors.value = colors;
-        articleColors.innerHTML = colors;
-        select.appendChild(articleColors);
+            // Modification du prix
+            document.getElementById('price').innerHTML = data.price;
+
+            // Modification de la description
+            document.getElementById('description').innerHTML = data.description;
+
+            // Insertion des options de couleurs
+            let select = document.querySelector("#colors")
+            for (let colors of data.colors) {
+
+                let articleColors = document.createElement("option");
+                articleColors.value = colors;
+                articleColors.innerHTML = colors;
+                select.appendChild(articleColors);
+            }
+
+            startListener(data)
+        }
     }
+    getArt()
 
-    startListener(data)
+    function addToCart() {
+        let startListener = (produit) => {
+            document.querySelector('#addToCart').addEventListener("click", (event) => {
+                // Récupération de la quantité et couleur choisies
+                const colorPicked = document.querySelector("#colors").value
+                const quantityPicked = parseInt(document.querySelector("#quantity").value)
+
+                if (colorPicked == '') {
+                    alert('Veuillez choisir une couleur')
+                    return false
+                }
+                if (quantityPicked == 0) {
+                    alert('Veuiller choisir une quantité')
+                    return false
+                }
+
+                // Récupération du localStorage
+                let panierStorage = localStorage.getItem('panier')
+                if (!panierStorage) {
+                    panier = []
+                } else {
+                    panier = JSON.parse(panierStorage)
+                }
+
+                // Rechercher le produit dans le panier
+                // [
+                //     0 : {_id, color, quantity, ....}
+                //     1 : {_id, color, quantity, ......} 
+                // ]
+                let index = panier.findIndex(p => p._id == produit._id && p.color == colorPicked)
+
+
+                if (index == -1) {
+                    produit.color = colorPicked
+                    produit.quantity = quantityPicked
+
+                    // Mise en panier
+                    panier.push(produit)
+                    alert("Produit ajouté au panier")
+
+                }
+                else {
+
+                    panier[index].quantity = panier[index].quantity + quantityPicked
+                    // panier[index].quantity += quantityPicked
+
+                }
+
+                // Sauvegarde du panier dans le localStorage
+                localStorage.setItem('panier', JSON.stringify(panier))
+
+                // Suppression du focus du bouton - Hormis chrome sur MacOS ...
+                document.getElementById('addToCart').blur()
+            })
+        }
+    }
+    addToCart();
+    
 }
-
-let startListener = (produit) => {
-    document.querySelector('#addToCart').addEventListener("click", (event) => {
-        // Récupération de la quantité et couleur choisies
-        const colorPicked = document.querySelector("#colors").value
-        const quantityPicked = parseInt(document.querySelector("#quantity").value)
-
-        if(colorPicked == ''){
-            alert('Veuillez choisir une couleur')
-            return false
-        }
-        if(quantityPicked == 0){
-            alert('Veuiller choisir une quantité')
-            return false
-        }
-
-      
-        // Récupération du localStorage
-        let panierStorage = localStorage.getItem('panier')
-        if(!panierStorage){
-            panier = []
-        }else{
-            panier = JSON.parse(panierStorage)
-        }
-       
-        // Rechercher le produit dans le panier
-        // [
-        //     0 : {_id, color, quantity, ....}
-        //     1 : {_id, color, quantity, ......} 
-        // ]
-        let index = panier.findIndex(p => p._id == produit._id && p.color == colorPicked)
-
-
-        if(index == -1){
-            produit.color = colorPicked
-            produit.quantity = quantityPicked
-
-            // Mise en panier
-            panier.push(produit)
-
-        }
-        else{          
-
-            panier[index].quantity = panier[index].quantity + quantityPicked
-            // panier[index].quantity += quantityPicked
-            
-        }
-
-        // Sauvegarde du panier dans le localStorage
-        localStorage.setItem('panier', JSON.stringify(panier))
-
-        // Suppression du focus du bouton - Hormis chrome sur MacOS ...
-        document.getElementById('addToCart').blur()
-    })
-}
-
 window.addEventListener('load', () => {
     start()
 })
 
 
 /*
-ok 1 - Récupération de l'ID
-ok 2 - Appel API pour récupérer le produit avec l'ID
-ok 3 - Insert des données dans "la page web" (LE DOM)
+Récupération de l'ID
+Appel API pour récupérer le produit avec l'ID
+Insert des données dans "la page web" (LE DOM)
 
-ok 4 - Ecouter le bouton ajouter au panier
-ok 5 - Récupérer les données du produit (couleur et quantité)
-ok 6 - Enregistrer dans le panier
-ok 6.1 - Attention vérifier si le produit n'est pas déjà dans le panier
+Ecouter le bouton ajouter au panier
+Récupérer les données du produit (couleur et quantité)
+Enregistrer dans le panier
+Attention vérifier si le produit n'est pas déjà dans le panier
 
-ok -> Si le produit et la couleur existe => modifier la quantité
-ok -> Si le produit et la couleur n'existe pas => ajouter le produit (c'est un nouveau)
+Si le produit et la couleur existe => modifier la quantité
+Si le produit et la couleur n'existe pas => ajouter le produit (c'est un nouveau)
 
 */
