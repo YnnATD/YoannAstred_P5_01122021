@@ -11,7 +11,7 @@ let start = () => {
 
     // On vide le localStorage pour recommencer plus tard le processus d'achat
 
-    localStorage.removeItem('panier'); 
+    localStorage.removeItem('panier');
 }
 
 window.addEventListener('load', () => {

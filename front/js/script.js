@@ -1,19 +1,19 @@
 window.addEventListener('load', (e) => {
 
     // Récupération des articles dans l'API
-    
+
     fetch('http://localhost:3000/api/products')
         .then(response => response.json())
         .then(products => {
-  
+
             let container = document.querySelector('#items')
 
-             // Boucle pour parcourir les produits
-  
-            for(product of products){    
+            // Boucle pour parcourir les produits
+
+            for (product of products) {
 
                 // Insertion dans le DOM à la position spécifiée
-                 
+
                 container.insertAdjacentHTML('beforeend', `
                     <a href="./product.html?id=${product._id}">
                         <article>
@@ -26,5 +26,5 @@ window.addEventListener('load', (e) => {
             }
         })
         .catch(err => console.log(err))
-  
-  })
+
+})

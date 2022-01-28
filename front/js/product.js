@@ -28,7 +28,7 @@ let insertProduct = (data) => {
     // Modification du titre
 
     document.getElementById('title').innerHTML = data.name;
-            
+
     // Modification du prix
 
     document.getElementById('price').innerHTML = data.price;
@@ -60,12 +60,12 @@ let startListener = (produit) => {
 
         const colorPicked = document.querySelector("#colors").value
         const quantityPicked = parseInt(document.querySelector("#quantity").value)
- 
-        if(colorPicked == ''){
+
+        if (colorPicked == '') {
             alert('Veuillez choisir une couleur')
             return false
         }
-        if(quantityPicked == 0){
+        if (quantityPicked == 0) {
             alert('Veuiller choisir une quantité')
             return false
         }
@@ -73,17 +73,17 @@ let startListener = (produit) => {
         // création du panier
 
         let panierStorage = localStorage.getItem('panier')
-        if(!panierStorage){
+        if (!panierStorage) {
             panier = []
-        }else{
+        } else {
             panier = JSON.parse(panierStorage)
         }
-       
+
         // Rechercher le produit dans le panier
 
         let index = panier.findIndex(p => p._id == produit._id && p.color == colorPicked)
 
-        if(index == -1){
+        if (index == -1) {
             produit.color = colorPicked
             produit.quantity = quantityPicked
 
@@ -93,10 +93,10 @@ let startListener = (produit) => {
             alert("Produit ajouté au panier")
 
         }
-        else{          
+        else {
 
             panier[index].quantity = panier[index].quantity + quantityPicked
-            
+
         }
 
         // Sauvegarde du panier dans le localStorage

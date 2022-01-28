@@ -10,7 +10,7 @@ let updateTotal = (quantity, price) => {
 let totalPrice = document.querySelector('#totalPrice')
 let totalQuantity = document.querySelector('#totalQuantity')
 
- // Mise en place des totaux
+// Mise en place des totaux
 
 let displayTotal = () => {
     totalPrice.textContent = ttp
