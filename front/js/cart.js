@@ -270,7 +270,7 @@ let start = () => {
         fetch("http://localhost:3000/api/products/order", options)
             .then((response) => response.json())
             .then((data) => {
-                localStorage.clear();
+                localStorage.removeItem('panier');
                 window.location.href = "confirmation.html?id=" + data.orderId;
             })
 
